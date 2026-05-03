@@ -33,15 +33,41 @@ class PineconeService {
     }
   }
 
+  async _getEmbedding(text) {
+    const embeddingModels = ["gemini-embedding-2", "gemini-embedding-001", "embedding-001"];
+    let embedding = null;
+
+    for (const modelName of embeddingModels) {
+      try {
+        const model = this.genAI.getGenerativeModel({ model: modelName });
+        // Requesting 1536 dimensions to match the 'codevector' index
+        const result = await model.embedContent({
+          content: { parts: [{ text }] },
+          outputDimensionality: 1536
+        });
+        embedding = result.embedding.values;
+        
+        // Final safety check: Slice to 1536 to prevent dimension mismatch errors
+        if (embedding && embedding.length > 1536) {
+          console.warn(`Vector dimension ${embedding.length} too large, slicing to 1536.`);
+          embedding = embedding.slice(0, 1536);
+        }
+
+        if (embedding) return embedding;
+      } catch (err) {
+        console.warn(`⚠️ Embedding model ${modelName} failed, trying next...`);
+      }
+    }
+    throw new Error('All available Gemini embedding models failed.');
+  }
+
   async upsertDocument(id, text, metadata = {}) {
     if (!this.index || !this.genAI) {
       throw new Error('Pinecone index or Gemini AI not initialized');
     }
 
     try {
-      const model = this.genAI.getGenerativeModel({ model: "embedding-001" });
-      const result = await model.embedContent(text);
-      const embedding = result.embedding.values;
+      const embedding = await this._getEmbedding(text);
 
       await this.index.upsert([{
         id: id,
@@ -52,7 +78,7 @@ class PineconeService {
       console.log(`✅ Document ${id} successfully ingested into Pinecone`);
       return true;
     } catch (error) {
-      console.error('❌ Error ingesting document into Pinecone:', error);
+      console.error('❌ Error ingesting document into Pinecone:', error.message);
       throw error;
     }
   }
@@ -64,21 +90,7 @@ class PineconeService {
     }
     
     try {
-      const embeddingModels = ["gemini-embedding-2", "gemini-embedding-001", "embedding-001"];
-      let embedding = null;
-
-      for (const modelName of embeddingModels) {
-        try {
-          const model = this.genAI.getGenerativeModel({ model: modelName });
-          const result = await model.embedContent(queryText);
-          embedding = result.embedding.values;
-          if (embedding) break;
-        } catch (err) {
-          console.warn(`⚠️ Embedding model ${modelName} failed, trying next...`);
-        }
-      }
-
-      if (!embedding) throw new Error('No embedding models available');
+      const embedding = await this._getEmbedding(queryText);
 
       const queryResponse = await this.index.query({
         vector: embedding,

@@ -1,5 +1,6 @@
 const screeningService = require('../services/screeningService');
 const pineconeService = require('../services/pineconeService');
+const Candidate = require('../models/Candidate');
 
 exports.screenCandidate = async (req, res) => {
   try {
@@ -11,7 +12,7 @@ exports.screenCandidate = async (req, res) => {
 
     console.log(`Screening candidate: ${candidateName || 'Unknown'}`);
 
-    // RAG: Fetch relevant context from Pinecone (simulated with dummy vector for now)
+    // RAG: Fetch relevant context from Pinecone
     let context = [];
     try {
       console.log('RAG: Querying Pinecone for historical context...');
@@ -22,10 +23,20 @@ exports.screenCandidate = async (req, res) => {
 
     const rankingResult = await screeningService.rankCandidate(resumeText, jobDescription, context);
 
+    // Save to MongoDB
+    const candidate = new Candidate({
+      name: candidateName || 'Unknown',
+      resumeText: resumeText,
+      score: rankingResult.score,
+      reasoning: rankingResult.reasoning
+    });
+    await candidate.save();
+
     res.status(200).json({
       success: true,
       data: {
-        candidateName,
+        candidateName: candidate.name,
+        id: candidate._id,
         ...rankingResult
       }
     });
@@ -37,14 +48,13 @@ exports.screenCandidate = async (req, res) => {
 };
 
 exports.getRankings = async (req, res) => {
-  // Dummy data representing candidates that would normally be fetched from MongoDB
-  const mockRankings = [
-    { candidateName: 'John Doe', score: 85, reasoning: 'Strong technical skills, matches 90% of requirements.' },
-    { candidateName: 'Jane Smith', score: 72, reasoning: 'Good background but lacks direct experience in Pinecone.' }
-  ];
-
-  res.status(200).json({
-    success: true,
-    data: mockRankings
-  });
+  try {
+    const rankings = await Candidate.find().sort({ score: -1 }).limit(10);
+    res.status(200).json({
+      success: true,
+      data: rankings
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch rankings' });
+  }
 };

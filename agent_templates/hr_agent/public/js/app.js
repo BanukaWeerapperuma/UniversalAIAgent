@@ -3,6 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const navItems = document.querySelectorAll('.nav-item');
     const sections = document.querySelectorAll('.section');
 
+    // Dashboard Stats Logic
+    async function updateStats() {
+        try {
+            const response = await fetch('/api/admin/stats');
+            const data = await response.json();
+            if (data.success) {
+                document.getElementById('rankedCount').innerText = data.data.candidatesRanked;
+                document.getElementById('onboardCount').innerText = data.data.activeOnboarding;
+                document.getElementById('complianceRate').innerText = data.data.complianceRate + '%';
+            }
+        } catch (error) {
+            console.error('Failed to update dashboard stats');
+        }
+    }
+
+    updateStats();
+    setInterval(updateStats, 30000); // Update every 30 seconds
+
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
             e.preventDefault();

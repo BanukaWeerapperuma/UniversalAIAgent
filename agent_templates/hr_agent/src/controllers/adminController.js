@@ -1,4 +1,25 @@
 const pineconeService = require('../services/pineconeService');
+const Candidate = require('../models/Candidate');
+const Employee = require('../models/Employee');
+
+exports.getStats = async (req, res) => {
+  try {
+    const candidateCount = await Candidate.countDocuments();
+    const employeeCount = await Employee.countDocuments();
+    
+    res.status(200).json({
+      success: true,
+      data: {
+        candidatesRanked: candidateCount,
+        activeOnboarding: employeeCount,
+        complianceRate: 100
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+};
 
 exports.ingestData = async (req, res) => {
   try {
