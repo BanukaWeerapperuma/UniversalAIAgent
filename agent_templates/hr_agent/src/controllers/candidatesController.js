@@ -32,6 +32,11 @@ exports.screenCandidate = async (req, res) => {
     });
     await candidate.save();
 
+    // Emit real-time update
+    if (req.io) {
+      req.io.emit('statsUpdated');
+    }
+
     res.status(200).json({
       success: true,
       data: {

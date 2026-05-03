@@ -179,6 +179,41 @@ body {
     color: var(--text-dim);
 }
 
+/* Info Grid Styling */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: transform 0.3s;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--secondary-neon);
+}
+
+.info-icon {
+    font-size: 2.5rem;
+}
+
+.info-card h4 {
+    color: var(--primary-neon);
+    font-size: 1.25rem;
+}
+
+.info-card p {
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
 /* Section Controls */
 .section {
     display: none;

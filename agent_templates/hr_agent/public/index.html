@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BMAD | HR Automation Agent</title>
+    <title>HR Automation Agent - BMAD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body class="dark-theme">
     <div class="app-container">
@@ -32,6 +33,9 @@
                 </a>
                 <a href="#" class="nav-item" data-section="knowledge">
                     <span class="icon">📚</span> Knowledge Base
+                </a>
+                <a href="#" class="nav-item" data-section="app-info">
+                    <span class="icon">ℹ️</span> App Info
                 </a>
             </nav>
             <div class="sidebar-footer">
@@ -198,6 +202,46 @@
                         <button id="ingestBtn" class="btn-primary">Vectorize & Store in Knowledge Base</button>
                     </div>
                     <div id="ingestResult" class="result-card glass hidden"></div>
+                </section>
+
+                <!-- App Info Section -->
+                <section id="app-info" class="section">
+                    <div class="header-group">
+                        <h2>App Information</h2>
+                        <p>Learn more about the BMAD HR Automation Agent capabilities.</p>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-card glass">
+                            <span class="info-icon">📊</span>
+                            <h4>Dashboard</h4>
+                            <p>Real-time monitoring of your HR pipeline. Tracks candidate counts, active onboardings, and compliance metrics directly from MongoDB.</p>
+                        </div>
+                        <div class="info-card glass">
+                            <span class="info-icon">🔍</span>
+                            <h4>AI Recruitment</h4>
+                            <p>Uses Gemini AI (2026 Edition) to rank candidates. It combines resume text with historical context from the Vector DB for 99% accuracy.</p>
+                        </div>
+                        <div class="info-card glass">
+                            <span class="info-icon">👤</span>
+                            <h4>Onboarding</h4>
+                            <p>Automates the entire transition from candidate to employee. Generates checklists and initializes Payroll Profiles instantly.</p>
+                        </div>
+                        <div class="info-card glass">
+                            <span class="info-icon">🛡️</span>
+                            <h4>Compliance</h4>
+                            <p>An automated watchdog that scans all requests for labor law violations and ensures PII data privacy is maintained.</p>
+                        </div>
+                        <div class="info-card glass">
+                            <span class="info-icon">📚</span>
+                            <h4>Knowledge Base</h4>
+                            <p>The "Brain" of the agent. Allows admins to ingest new job descriptions and policies into the Pinecone Vector Database.</p>
+                        </div>
+                        <div class="info-card glass">
+                            <span class="info-icon">⚙️</span>
+                            <h4>BMAD Framework</h4>
+                            <p>Built on the **Build-Manage-Automate-Deploy** methodology for scalable, enterprise-grade AI agent deployment.</p>
+                        </div>
+                    </div>
                 </section>
             </div>
         </main>

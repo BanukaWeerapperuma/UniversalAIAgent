@@ -19,7 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateStats();
-    setInterval(updateStats, 30000); // Update every 30 seconds
+    
+    // Socket.IO Real-time Logic
+    const socket = io();
+    socket.on('statsUpdated', () => {
+        console.log('Real-time update received!');
+        updateStats();
+    });
 
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
