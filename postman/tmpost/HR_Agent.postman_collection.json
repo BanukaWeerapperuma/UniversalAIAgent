@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "bmad-hr-agent-collection",
+		"name": "BMAD HR Agent",
+		"description": "API tests for the HR Automation Agent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Screen Candidate",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"candidateName\": \"John Doe\",\n    \"resumeText\": \"Fullstack dev with 5 years experience\",\n    \"jobDescription\": \"Looking for a Node.js expert\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/candidates/screen",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"candidates",
+						"screen"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Onboarding Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workflowType\": \"onboarding\",\n    \"data\": {\n        \"name\": \"Alice Smith\",\n        \"email\": \"alice@example.com\",\n        \"department\": \"Engineering\",\n        \"role\": \"Frontend Developer\"\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/agent/workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"agent",
+						"workflow"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Leave Request Workflow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"workflowType\": \"leave_request\",\n    \"data\": {\n        \"employeeId\": \"EMP12345\",\n        \"days\": 5\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/agent/workflow",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"agent",
+						"workflow"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMAD | HR Automation Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icon">▲</span>
+                <h1>BMAD<span>HR</span></h1>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-section="overview">
+                    <span class="icon">📊</span> Overview
+                </a>
+                <a href="#" class="nav-item" data-section="recruitment">
+                    <span class="icon">🔍</span> AI Recruitment
+                </a>
+                <a href="#" class="nav-item" data-section="onboarding">
+                    <span class="icon">👤</span> Onboarding
+                </a>
+                <a href="#" class="nav-item" data-section="compliance">
+                    <span class="icon">🛡️</span> Compliance
+                </a>
+                <a href="#" class="nav-item" data-section="knowledge">
+                    <span class="icon">📚</span> Knowledge Base
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <span class="dot online"></span> Agent Active
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search employees or candidates...">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications">🔔</div>
+                    <div class="avatar">HR</div>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <!-- Overview Section -->
+                <section id="overview" class="section active">
+                    <div class="header-group">
+                        <h2>Dashboard Overview</h2>
+                        <p>Real-time analytics for your HR Automation Agent.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Candidates Ranked</h3>
+                            <div class="value">128</div>
+                            <div class="trend positive">+12% this week</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Onboarding</h3>
+                            <div class="value">14</div>
+                            <div class="trend">8 active now</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Compliance Rate</h3>
+                            <div class="value">100%</div>
+                            <div class="trend positive">Zero violations</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recruitment Section -->
+                <section id="recruitment" class="section">
+                    <div class="header-group">
+                        <h2>AI Candidate Screening</h2>
+                        <p>Upload resumes and rank candidates using GPT-4 and Vector RAG.</p>
+                    </div>
+                    <div class="form-container glass">
+                        <div class="input-group">
+                            <label>Candidate Name</label>
+                            <input type="text" id="candidateName" placeholder="e.g. Alice Smith">
+                        </div>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Job Description</label>
+                                <textarea id="jobDescription" placeholder="Paste the job description here..."></textarea>
+                            </div>
+                            <div class="input-group">
+                                <label>Resume Content</label>
+                                <textarea id="resumeText" placeholder="Paste the resume text here..."></textarea>
+                            </div>
+                        </div>
+                        <button id="screenBtn" class="btn-primary">Analyze & Rank Candidate</button>
+                    </div>
+                    <div id="rankingResult" class="result-card glass hidden">
+                        <!-- Results injected here -->
+                    </div>
+                </section>
+
+                <!-- Onboarding Section -->
+                <section id="onboarding" class="section">
+                    <div class="header-group">
+                        <h2>Employee Onboarding</h2>
+                        <p>Initiate automated workflows for new hires.</p>
+                    </div>
+                    <div class="form-container glass">
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Full Name</label>
+                                <input type="text" id="newHireName" placeholder="e.g. John Doe">
+                            </div>
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="email" id="newHireEmail" placeholder="john@company.com">
+                            </div>
+                            <div class="input-group">
+                                <label>Department</label>
+                                <select id="newHireDept">
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="HR">HR</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Role</label>
+                                <input type="text" id="newHireRole" placeholder="e.g. Senior Backend Dev">
+                            </div>
+                        </div>
+                        <button id="onboardBtn" class="btn-secondary">Start Onboarding Workflow</button>
+                    </div>
+                    <div id="onboardingLog" class="log-container glass hidden">
+                        <!-- Onboarding steps injected here -->
+                    </div>
+                </section>
+
+                <!-- Compliance Section -->
+                <section id="compliance" class="section">
+                    <div class="header-group">
+                        <h2>Compliance Safety Console</h2>
+                        <p>Monitoring labor law adherence and data privacy.</p>
+                    </div>
+                    <div class="compliance-table-container glass">
+                        <table class="compliance-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Check Type</th>
+                                    <th>Target</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complianceLogs">
+                                <tr>
+                                    <td>Just now</td>
+                                    <td>Labor Law Check</td>
+                                    <td>Candidate Screen</td>
+                                    <td><span class="status-tag success">Passed</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Knowledge Base Section -->
+                <section id="knowledge" class="section">
+                    <div class="header-group">
+                        <h2>Knowledge Base Manager</h2>
+                        <p>Ingest job descriptions and ideal candidate profiles into the Vector DB.</p>
+                    </div>
+                    <div class="form-container glass">
+                        <div class="input-group">
+                            <label>Document Title / ID</label>
+                            <input type="text" id="docId" placeholder="e.g. ideal-fullstack-dev">
+                        </div>
+                        <div class="input-group">
+                            <label>Category</label>
+                            <select id="docCategory">
+                                <option value="Job Description">Job Description</option>
+                                <option value="Candidate Profile">Candidate Profile</option>
+                                <option value="HR Policy">HR Policy</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Content to Ingest</label>
+                            <textarea id="docContent" placeholder="Paste the document text here to vectorize it..."></textarea>
+                        </div>
+                        <button id="ingestBtn" class="btn-primary">Vectorize & Store in Knowledge Base</button>
+                    </div>
+                    <div id="ingestResult" class="result-card glass hidden"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
