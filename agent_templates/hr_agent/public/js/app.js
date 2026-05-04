@@ -20,12 +20,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateStats();
     
-    // Socket.IO Real-time Logic
-    const socket = io();
-    socket.on('statsUpdated', () => {
-        console.log('Real-time update received!');
-        updateStats();
-    });
+    // Socket.IO Real-time Logic (Graceful fallback for Vercel)
+    if (typeof io !== 'undefined') {
+        try {
+            const socket = io();
+            socket.on('statsUpdated', () => {
+                console.log('Real-time update received!');
+                updateStats();
+            });
+        } catch (err) {
+            console.warn('Socket.io failed to initialize:', err);
+        }
+    } else {
+        console.warn('Socket.io client not loaded. Real-time updates disabled.');
+    }
 
     navItems.forEach(item => {
         item.addEventListener('click', (e) => {
