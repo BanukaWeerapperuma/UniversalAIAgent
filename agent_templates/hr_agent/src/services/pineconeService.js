@@ -34,28 +34,46 @@ class PineconeService {
   }
 
   async _getEmbedding(text) {
-    const embeddingModels = ["gemini-embedding-2", "gemini-embedding-001", "embedding-001"];
+    if (!this.genAI) {
+      console.warn('⚠️ Gemini AI not initialized, cannot generate embeddings.');
+      throw new Error('Gemini AI client is not initialized. Check your GOOGLE_API_KEY.');
+    }
+
+    const embeddingModels = ["text-embedding-004", "gemini-embedding-2", "gemini-embedding-001", "embedding-001"];
     let embedding = null;
 
     for (const modelName of embeddingModels) {
       try {
+        console.log(`Attempting embedding with model: ${modelName}...`);
         const model = this.genAI.getGenerativeModel({ model: modelName });
-        // Requesting 1536 dimensions to match the 'codevector' index
-        const result = await model.embedContent({
-          content: { parts: [{ text }] },
-          outputDimensionality: 1536
-        });
-        embedding = result.embedding.values;
         
-        // Final safety check: Slice to 1536 to prevent dimension mismatch errors
-        if (embedding && embedding.length > 1536) {
-          console.warn(`Vector dimension ${embedding.length} too large, slicing to 1536.`);
-          embedding = embedding.slice(0, 1536);
+        // Use a generic request first, then try with outputDimensionality if it fails
+        let result;
+        try {
+          result = await model.embedContent({
+            content: { parts: [{ text }] },
+            outputDimensionality: 1536
+          });
+        } catch (dimErr) {
+          console.warn(`⚠️ Model ${modelName} does not support outputDimensionality, trying default.`);
+          result = await model.embedContent(text);
         }
 
-        if (embedding) return embedding;
+        embedding = result.embedding.values;
+        
+        // Final safety check: Slice or pad to 1536 to prevent dimension mismatch errors in Pinecone
+        if (embedding) {
+          if (embedding.length > 1536) {
+            console.warn(`Vector dimension ${embedding.length} too large, slicing to 1536.`);
+            embedding = embedding.slice(0, 1536);
+          } else if (embedding.length < 1536) {
+            console.warn(`Vector dimension ${embedding.length} too small, padding with zeros to 1536.`);
+            while (embedding.length < 1536) embedding.push(0);
+          }
+          return embedding;
+        }
       } catch (err) {
-        console.warn(`⚠️ Embedding model ${modelName} failed, trying next...`);
+        console.warn(`⚠️ Embedding model ${modelName} failed: ${err.message}`);
       }
     }
     throw new Error('All available Gemini embedding models failed.');

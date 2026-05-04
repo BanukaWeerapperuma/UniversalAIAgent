@@ -8,7 +8,11 @@ const dns = require('dns');
 const path = require('path');
 
 // Set DNS servers to fix potential MongoDB SRV resolution issues
-dns.setServers(["1.1.1.1", "8.8.8.8"]);
+try {
+  dns.setServers(["1.1.1.1", "8.8.8.8"]);
+} catch (e) {
+  console.warn('⚠️ Could not set custom DNS servers:', e.message);
+}
 
 const app = express();
 const server = http.createServer(app);
@@ -45,7 +49,7 @@ app.use('/api/admin', adminRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok', environment: process.env.BMAD_ENV });
+  res.status(200).json({ status: 'ok', environment: process.env.BMAD_ENV, platform: process.env.VERCEL ? 'Vercel' : 'Local' });
 });
 
 // Database connection
@@ -67,10 +71,15 @@ io.on('connection', (socket) => {
   console.log('📱 A user connected to real-time dashboard');
 });
 
-// Start server
-server.listen(PORT, async () => {
-  console.log(`🚀 Server running on port ${PORT} in ${process.env.BMAD_ENV || 'development'} mode`);
-  await connectDB();
-});
+// Start server - Only if not running on Vercel
+if (!process.env.VERCEL) {
+  server.listen(PORT, async () => {
+    console.log(`🚀 Server running on port ${PORT} in ${process.env.BMAD_ENV || 'development'} mode`);
+    await connectDB();
+  });
+} else {
+  // On Vercel, we still need to connect to DB
+  connectDB();
+}
 
-module.exports = { io, server, app };
+module.exports = app;
