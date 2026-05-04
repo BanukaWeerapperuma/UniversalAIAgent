@@ -1,36 +1,18 @@
 {
   "version": 2,
   "name": "hr-automation-agent",
-  "builds": [
+  "rewrites": [
     {
-      "src": "agent_templates/hr_agent/src/server.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/js/(.*)",
-      "dest": "/agent_templates/hr_agent/public/js/$1"
+      "source": "/api/(.*)",
+      "destination": "/agent_templates/hr_agent/src/server.js"
     },
     {
-      "src": "/css/(.*)",
-      "dest": "/agent_templates/hr_agent/public/css/$1"
+      "source": "/agent/(.*)",
+      "destination": "/agent_templates/hr_agent/src/server.js"
     },
     {
-      "src": "/api/(.*)",
-      "dest": "agent_templates/hr_agent/src/server.js"
-    },
-    {
-      "src": "/agent/(.*)",
-      "dest": "agent_templates/hr_agent/src/server.js"
-    },
-    {
-      "src": "/health",
-      "dest": "agent_templates/hr_agent/src/server.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/agent_templates/hr_agent/public/index.html"
+      "source": "/health",
+      "destination": "/agent_templates/hr_agent/src/server.js"
     }
   ]
 }
