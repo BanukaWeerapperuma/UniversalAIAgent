@@ -5,14 +5,21 @@ const Employee = require('../models/Employee');
 exports.getStats = async (req, res) => {
   try {
     const candidateCount = await Candidate.countDocuments();
-    const employeeCount = await Employee.countDocuments();
+    const activeOnboardingCount = await Employee.countDocuments({ onboardingStatus: 'Pending' });
+    
+    // Calculate candidates ranked this week
+    const lastWeek = new Date();
+    lastWeek.setDate(lastWeek.getDate() - 7);
+    const candidatesThisWeek = await Candidate.countDocuments({ createdAt: { $gte: lastWeek } });
     
     res.status(200).json({
       success: true,
       data: {
         candidatesRanked: candidateCount,
-        activeOnboarding: employeeCount,
-        complianceRate: 100
+        activeOnboarding: activeOnboardingCount,
+        complianceRate: 100,
+        candidateTrend: `+${candidatesThisWeek} this week`,
+        complianceTrend: 'Zero violations'
       }
     });
   } catch (error) {

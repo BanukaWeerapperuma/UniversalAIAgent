@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('rankedCount').innerText = data.data.candidatesRanked;
                 document.getElementById('onboardCount').innerText = data.data.activeOnboarding;
                 document.getElementById('complianceRate').innerText = data.data.complianceRate + '%';
+                
+                // Update dynamic trends
+                if (data.data.candidateTrend) {
+                    document.getElementById('candidateTrend').innerText = data.data.candidateTrend;
+                }
+                if (data.data.complianceTrend) {
+                    document.getElementById('complianceTrend').innerText = data.data.complianceTrend;
+                }
             }
         } catch (error) {
             console.error('Failed to update dashboard stats');
@@ -19,7 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     updateStats();
-    
+    // Poll for stats every 10 seconds (for real-time updates on platforms without WebSockets)
+    setInterval(updateStats, 10000);
+
     // Socket.IO Real-time Logic (Graceful fallback for Vercel)
     if (typeof io !== 'undefined') {
         try {
